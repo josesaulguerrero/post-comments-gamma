@@ -1,36 +1,29 @@
 package co.com.post_comments.gamma.application.config;
 
-
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
-import org.springframework.context.annotation.Bean;
+import co.com.post_comments.gamma.application.bus.views.CommentView;
+import co.com.post_comments.gamma.application.bus.views.PostView;
+import co.com.post_comments.gamma.application.commons.json.JSONMapper;
+import lombok.AllArgsConstructor;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@AllArgsConstructor
 public class RabbitMQConfig {
-    public static final String EXCHANGE = "main.exchange";
+    public static final String PROXY_QUEUE_POST_CREATED = "events.proxy.post.created";
+    public static final String PROXY_QUEUE_COMMENT_ADDED = "events.proxy.comment.added";
+    
+    private final JSONMapper jsonMapper;
 
-    public static final String MAIN_QUEUE = "events.main";
-
-    public static final String MAIN_ROUTING_KEY = "routingKey.main";
-
-    @Bean
-    public Queue generalQueue(){
-        return new Queue(MAIN_QUEUE);
+    @RabbitListener(queues = { PROXY_QUEUE_POST_CREATED })
+    public void postCreatedRabbitListener(String jsonView) {
+        PostView view = (PostView) this.jsonMapper.readFromJson(jsonView, PostView.class);
+        System.out.println("post view = " + view);
     }
 
-    @Bean
-    public TopicExchange getTopicExchange() {
-        return new TopicExchange(EXCHANGE);
-    }
-
-    @Bean
-    public Binding BindingToGeneralQueue() {
-        return BindingBuilder
-                .bind(generalQueue())
-                .to(getTopicExchange())
-                .with(MAIN_ROUTING_KEY);
+    @RabbitListener(queues = { PROXY_QUEUE_COMMENT_ADDED })
+    public void commendAddedRabbitListener(String jsonView) {
+        CommentView view = (CommentView) this.jsonMapper.readFromJson(jsonView, CommentView.class);
+        System.out.println("comment view = " + view);
     }
 }

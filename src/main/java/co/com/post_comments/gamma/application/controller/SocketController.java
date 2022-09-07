@@ -1,8 +1,8 @@
 package co.com.post_comments.gamma.application.controller;
 
 
-import co.com.post_comments.gamma.application.bus.models.CommentModel;
-import co.com.post_comments.gamma.application.bus.models.PostModel;
+import co.com.post_comments.gamma.application.bus.views.CommentView;
+import co.com.post_comments.gamma.application.bus.views.PostView;
 import co.com.post_comments.gamma.application.commons.json.JSONMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -39,12 +39,12 @@ public class SocketController {
 
     }
 
-    public void sendPostCreated(String correlationId, PostModel model) {
+    public void sendPostCreated(String correlationId, PostView view) {
 
 
     }
 
-    public void sendCommentAdded(String correlationId, CommentModel model) {
+    public void sendCommentAdded(String correlationId, CommentView view) {
 
 
 
