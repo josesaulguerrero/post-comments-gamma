@@ -19,12 +19,12 @@ public class RabbitMQConsumer {
     @RabbitListener(queues = {PROXY_QUEUE_POST_CREATED})
     public void postCreatedRabbitListener(String jsonView) {
         PostView view = (PostView) this.jsonMapper.readFromJson(jsonView, PostView.class);
-        this.socket.sendPostCreated("main space", view);
+        this.socket.sendPostCreated("mainSpace", view);
     }
 
     @RabbitListener(queues = {PROXY_QUEUE_COMMENT_ADDED})
     public void commendAddedRabbitListener(String jsonView) {
         CommentView view = (CommentView) this.jsonMapper.readFromJson(jsonView, CommentView.class);
-        this.socket.sendCommentAdded(view.id(), view);
+        this.socket.sendCommentAdded(view.getPostId(), view);
     }
 }
